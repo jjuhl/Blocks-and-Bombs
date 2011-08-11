@@ -1,2 +1,7 @@
 build
 TAGS
+*.[oa]
+CMakeCache.txt
+CMakeFiles/
+Makefile
+cmake_install.cmake
