@@ -1,0 +1,221 @@
+TODO items for Blocks and Bombs
+-----
+
+Add a "Settings" menu item. From this menu it should be possible to
+adjust things like:
+
+ - Quality: High, Medium, Low. Where the things we actually change
+   would be something along these lines: High quality = frame update
+   every 30ms, Blended text render, 44KHz audio, 32bpp
+   graphics. Medium quality = frame update every 40ms, Blended text
+   render 22KHz audio, 24bpp graphics. Low quality = frame update
+   every 50ms, Solid text render, 22KHz audio (maybe slightly lower
+   still?), 16bpp graphics. Perhaps also switch all alpha channels to
+   just color key (100% opacity/transparency only) at "low" level.
+
+ - Music volume (0-100%). If user sets 0%, save CPU time by not
+   playing at all rather than lowering volume.
+
+ - Sound effects volume (0-100%). Don't play at all if 0%, like music.
+
+ - Windowed or full-screen mode.
+
+ - Resolution setting. Initially we could just dynamically scale our
+   (800x600 optimized) graphics to suit (rotozoom?) - long term we'd
+   probably want to add graphics actually optimized for various
+   resolutions.
+
+   I'm wondering if we should just offer a few pre-defined resolution
+   options or if we should dynamically detect the capabillities of the
+   users system? I guess that initially, just offering a few
+   pre-determined resolutions like 800x600, 1024x768, 1600x1200 will
+   do fine (we do need to handle the case where a given resolution is
+   not possible and prune it from the list though).
+
+ - Difficulty. We need to think about what properties of a level
+   affect the percieved difficulty and let the user pick something
+   like "Impossible", "Hard", "Normal", "Easy", "Kindergarden" and
+   adjust game parameters accordingly. We probably want to let this
+   setting have an impact on the users score as well - it's no fun if
+   someone playing 50 levels at Kindergarden setting ends up scoring
+   more than someone playing 30 levels at Impossible setting.
+
+ - Language. This will require that some sort of internationalization
+   system be added - probably just use GNU gettext and .po files.
+
+ - Remap control keys. Different users have different keyboards (not
+   to mention different key preferences). It should be possible for
+   the user to assign custom keys to the various possible actions,
+   rather than only using hard-coded keys.
+
+We want these settings to be stored in a config file so the user
+doesn't need to re-do them each time.
+
+---
+
+Make it possible to change all settings via commandline switches
+and/or manual editing of the config file. This is so that users who
+can't launch the game in graphical mode for some reason still have a
+way of adjusting the settings so that the game will start.
+
+---
+
+If no user-defined config is available, default to starting the game
+in high quality mode and automatically fall back to medium or low if
+some setting fails.
+Preferably this will be so fool-proof that there will never be a need
+to manually edit the config, but in real life that's probably not
+realistic.
+
+---
+
+Add "About" menu item showing the license of the game as well as the
+main contributors.
+
+---
+
+Write a graphical level editor.
+
+---
+
+Add *many* levels. Also implement a random level generator that will
+take over when all the pre-defined levels are played. This will make
+the game still be fun to play even if we are slow to add
+well-engineered pre-defined levels. The random level generator should
+know what level the user is currently at as well as her difficulty
+setting and try to create levels of appropriate difficulty.
+
+---
+
+Add various "powerups" like; >>Life<< (adds extra life up to some max
+limit), >>swiftness<< (increases movement speed, again with a max
+limit), >>collector<< (when picking up any block of a specific colour
+all other visible blocks of that colour also get picked up - should
+probably be time limited), >>indestructible/shield<< (make player
+invulnerable to bombs for a certain time duration), >>ghost<< (player
+can pass through walls for a limited time (will die if on wall tile
+when ghost expires, can pass through bomb tiles as well? or should
+that be some "super ghost" powerup?)), >>croesus<< (all scores gained
+are multiplied by some (positive) factor - this could be time limited
+or permanent, maybe even stackable up to some max level), >>freeze<<
+(stop time for all tiles for a (short) number of seconds - no new
+tiles, no turning into walls/bombs), >>cash<< (a powerup that just
+adds a nice amount of points to your score).
+
+Additionally, picking up a powerup should cause the player to gain a
+small addition to her score. But only a very small addition since the
+powerup should be enough in itself - the added score is mainly to a)
+keep the player hunting powerups to maximize score (adding a
+competitive element) and b) keep the score counter churning (keeping
+the game screen active and interresting).
+
+We could also make powerups more interesting/challenging by making
+them colour specific. meaning that sometimes powerups can be picked up
+just by rolling the cube onto the square containing them, but
+sometimes you have to roll onto them with the right colour (just like
+when picking up blocks). Colour specific powerups could be indicated
+by a unique background colour, a coloured rectangle around them or
+even by a powerup animation in a unique primary colour.
+
+Dying should probably remove all powerups from the player or at least
+reduce all powerups by one level (for those that are stackable).
+
+---
+
+In addition to "powerups" we should add "powerdowns" as well. These
+should temporarily make the game harder to play by - for example -
+>>slow<< making the users movement speed a crawl, >>backwards<<
+inverting controls, >>confused<< randomly shuffle colours on the cube
+every time it moves so the player never knows what the configuration
+will be, >>panic<< make blocks time out and become walls/bombs faster
+(sort of the same as just slowing movement, so maybe not, but still,
+variations are good), >>poor<< all scores gained are reduced by some
+factor, >>loss<< a (not too large) number of points are instantly
+deducted from your score.
+
+I'm thinking that we want the picking up of a powerdown to (usually)
+give the player an addition to her score - probably even one that's
+greater than picking up a powerup (but still a lot less than what you
+get from picking up blocks). This would provide a incentive for
+players to pick up the powerdowns intentionally in order to get the
+points it gives you even if they then have to live with the effects
+for a few seconds - or maybe this is a bad idea and the player should
+instead actually get a score penalty (or just no change except for the
+nasty effect of the powerdown)???
+
+So how do we make powerdowns something that the player will actually
+pick up once in a while?  They are bad for you so naturally players
+will avoid them when possible, but to make them a fun part of the game
+we need to have players pick them up sometimes. Perhaps we can
+sometimes drop question marks or similar that are often random
+powerups but sometimes powerdowns. We can also design levels so that
+they have "single track" corridors that the player is forced to use
+where the powerdowns appear, or we can use points/score to make them
+interesting, or...???  We could also make some levels where the pickup
+of a certain number of powerdowns is a requirement in order to
+complete the level - but that seems wrong.
+
+Should dying clear powerdowns?  We don't want to make it so that if
+the user picks up a powerdown it's better to just sacrifice a life to
+clear it than to wait it out. Maybe we should let powerdowns persist
+across player death but just cut the remaining powerdown time in half
+- this way it is not very attractive to just dye to clear a powerdown
+since it'll still be there, but if you do die at least the powerdown
+will soon be gone... dunno, needs more thought...
+
+---
+
+Add level bonuses. Whenever a level is completed there should be a
+tally of the points gained during that level and the player should get
+some bonuses for excellent performance. Some ideas; bonus for fast
+completion - somehow assign a number of points based on the time (not)
+spend completing a level. Life bonus - assign a bonus based on the
+number of lives left at the end of a level. Powerup/powerdown bonus -
+assign some points based on the number of powerups picked up / number
+of powerdowns avoided (should probably be kept small, even
+insignificant, since the powerup/downs themselves already add a
+bonus/deficit).
+
+---
+
+Add in-level skill bonuses. This should be things that make the player
+keep at the game in order to improve her skill - like; a bonus for
+picking up a block within 10% (or some other amount) of its timeout. A
+bonus for picking up 2, 3, 4 etc blocks of the same colour in a row
+(partly skill based, partly random due to random generation of next
+block). A bonus for moving to pick up a block in the least amount of
+possible moves from when it apears on the game board (hmm, need to
+work out how to calculate that..) - could be cool "optimum pickup, 200
+point bonus" or similar. A (small) bonus for not losing any life
+during the level. Etc.
+
+---
+
+Add special tiles like; Black holes that teleport you to some random
+new location on the board. Teleports that transport you to some fixed
+other teleport tile on the board. Quick exit tiles that end the level
+but at the cost of not gaining any bonuses nor all the points you
+would get from the blocks that you would collect if you completed the
+level normally (not sure this one is a good idea). Break-away tiles
+that you can only move over once (or n times) and then they
+disappear/turn to walls/bombs - could be used to make some levels
+where the player had to make some hard choices about whether to cross
+into some different area now or later.
+
+---
+
+Add bonus levels. These would be levels where (except for
+pre-determined wall tiles) every tile would have a block already
+placed on it with no timeout, so the player can just go crazy picking
+up blocks. There would be a timer on the overall time a player could
+spend in the level though. There would also be some conditions that
+needed to be met in an ordinary level in order to trigger a bonus
+level.
+
+Triggering these should be rare. But when triggered they should add a
+healthy amount of points to the players score, making triggering bonus
+levels yet another "skill feature" - games that you can get good at
+tend to keep people addicted longer ;-).
+
+---
+
