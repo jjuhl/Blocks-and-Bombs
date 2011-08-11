@@ -656,10 +656,6 @@ void PlayState::drawStatusArea(SDL_Surface* screen)
 
 void PlayState::updatePause()
 {
-  // Take a short nap to save some CPU time while we are paused anyway.
-  // This should not be longer than our regular update tick or events
-  // will build up unserviced in the event queue - 20ms does nicely.
-  SDL_Delay(20);
 }
 
 void PlayState::drawPause(SDL_Surface* screen)

@@ -12,7 +12,7 @@
 #include "bbengine.hh"
 
 BBEngine::BBEngine(int width, int height, int bpp)
-  : m_updateTimer(0), m_lastUpdate(SDL_GetTicks())
+  : m_updateTimer(0), m_lastUpdate(SDL_GetTicks()), m_currentState(0)
 {
   m_screen = SDL_SetVideoMode(width, height, bpp, SDL_SWSURFACE);
   if (!m_screen)
@@ -59,6 +59,8 @@ int BBEngine::exec()
   // Check for input or timeout
   // This is the main event loop that drives everything
   bool quit_it = false;
+  bool paused = false;
+  PlayState* playstate = 0;
   while (!quit_it) {
     if (!SDL_WaitEvent(&event))
       throw Exception("Error while waiting for SDL events");
@@ -90,6 +92,22 @@ int BBEngine::exec()
 
       // redraw now that we have potentially updated something
       m_currentState->draw(m_screen);
+
+      // If we are in the play state and the game is paused, reduce
+      // our timer tick to 150ms to save a bit of power until the user
+      // unpauses.
+      playstate = dynamic_cast<PlayState*>(m_currentState);
+      if (playstate) {
+        if (playstate->isPaused() && !paused) {
+          paused = true;
+          SDL_RemoveTimer(m_updateTimer);
+          m_updateTimer = SDL_AddTimer(150, updateCallback, 0);
+        } else if (!playstate->isPaused() && paused) {
+          paused = false;
+          SDL_RemoveTimer(m_updateTimer);
+          m_updateTimer = SDL_AddTimer(30, updateCallback, 0);
+        }
+      }
 
       // and update the resulting screen
       SDL_Flip(m_screen);
