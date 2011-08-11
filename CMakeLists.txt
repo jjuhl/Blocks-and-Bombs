@@ -45,3 +45,7 @@ add_executable(
    WIN32 # Avoid DOS prompt to appear in Windows
    ${SOURCES}
    )
+
+mark_as_advanced(
+  ETAGS
+)
