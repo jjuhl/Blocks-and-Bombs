@@ -115,10 +115,22 @@ void Board::update(Uint32 delta_time)
     newBlock();
   }
 
+  const Uint16 playerLife = m_player->livesLeft();
   // If player collides with object, pass on effects
   GameObject* collider = m_board[m_player->y() * m_width + m_player->x()];
   if (collider)
     collider->collision(m_player);
+
+  if (boxedIn()) {
+    Effect e;
+    e.life = -1;
+    m_player->setEffects(e);
+  }
+
+  // Check if the player has lost a life
+  if (m_player->livesLeft() < playerLife) {
+    std::cout << "player died" << std::endl;
+  }
 }
 
 void Board::centerDraw(const GameObject* obj, const SDL_Rect& srect, SDL_Rect& drect)
@@ -229,6 +241,49 @@ bool Board::isBlocked(Uint16 test_x, Uint16 test_y)
   return false;
 }
 
+bool Board::boxedIn() const
+{
+  // If the player is surrounded by walls on all sides, the player loses a life
+  int wallCount = 0;
+  // check left
+  if (m_player->x() == 0) {
+    ++wallCount;
+  } else {
+    Wall* w = dynamic_cast<Wall*>(m_board[m_player->y() * m_width + m_player->x() - 1]);
+    if (w)
+      ++wallCount;
+  }
+  // check right
+  if (m_player->x() == m_width - 1) {
+    ++wallCount;
+  } else {
+    Wall* w = dynamic_cast<Wall*>(m_board[m_player->y() * m_width + m_player->x() + 1]);
+    if (w)
+      ++wallCount;
+  }
+  // check up
+  if (m_player->y() == 0) {
+    ++wallCount;
+  } else {
+    Wall* w = dynamic_cast<Wall*>(m_board[(m_player->y() - 1) * m_width + m_player->x()]);
+    if (w)
+      ++wallCount;
+  }
+  // check down
+  if (m_player->y() == m_height - 1) {
+    ++wallCount;
+  } else {
+    Wall* w = dynamic_cast<Wall*>(m_board[(m_player->y() + 1) * m_width + m_player->x()]);
+    if (w)
+      ++wallCount;
+  }
+
+  if (wallCount == 4)
+    return true;
+
+  return false;
+}
+
 Block::Block(Board* board, Uint16 x, Uint16 y, AnimationResource& anim, BLOCK_COLOR col,
              Sint32 timeout)
   : GameObject(board, x, y), m_col(col), m_anim(anim), m_start_timeout(timeout),
@@ -253,6 +308,7 @@ void Block::update(Uint32 delta_time)
     m_board->removeGameObject(this);
     new Wall(m_board, m_x, m_y);
     m_board->level()->failedBlockPickup();
+    return;
   }
 
   // If time is running out, speed up animation
@@ -315,11 +371,26 @@ void Wall::draw(SDL_Surface** surface, SDL_Rect* rect)
   *rect = r;
 }
 
+void Wall::collision(GameObject* other)
+{
+  Player* player = dynamic_cast<Player*>(other);
+  if (!player)
+    return;
+
+  // Ok, the only way a player can collide with a wall is if the wall
+  // materialized from a block while the player was occupying the
+  // tile. If this happens the player loses a life.
+
+  Effect e;
+  e.life = -1;
+  player->setEffects(e);
+}
+
 Player::Player(Board* board, Uint16 x, Uint16 y)
   : GameObject(board, x, y),
     m_direction(NONE), m_move_delay(120), m_time_since_move(0), m_top(RED),
     m_bottom(PURPLE), m_up(BLUE), m_down(CYAN), m_left(GREEN), m_right(YELLOW),
-    m_score(0)
+    m_score(0), m_life(3)
 {
   m_top_img = IMG_LoadDisplayFormat("resources/NEW-cube-top.png");
   m_up_img = IMG_LoadDisplayFormat("resources/NEW-cube-up.png");
@@ -489,6 +560,7 @@ void Player::draw(SDL_Surface** surface, SDL_Rect* rect)
 void Player::setEffects(const Effect& e)
 {
   m_score += e.score;
+  m_life += e.life;
 }
 
 PlayState::PlayState()

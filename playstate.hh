@@ -40,6 +40,7 @@ public:
   ResourceLoader& loader() { return m_loader; }
 
 private:
+  bool boxedIn() const;
   ResourceLoader m_loader;
   Uint16 m_width;
   Uint16 m_height;
@@ -117,6 +118,7 @@ public:
 
   virtual void update(Uint32 delta_time);
   virtual void draw(SDL_Surface** surface, SDL_Rect* rect);
+  virtual void collision(GameObject*);
 
   virtual bool isBlocked() { return true; }
 
@@ -151,6 +153,9 @@ public:
   Uint32 score() const { return m_score; }
 
   void setEffects(const Effect& e);
+
+  Uint16 livesLeft() const { return m_life; }
+
 private:
   PLAYER_DIRECTION m_direction;
 
@@ -176,6 +181,7 @@ private:
   SDL_Surface* m_frame;
 
   Uint32 m_score;
+  Uint32 m_life;
 };
 
 class PlayState : public State {
