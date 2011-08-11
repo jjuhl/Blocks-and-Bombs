@@ -159,7 +159,7 @@ Should dying clear powerdowns?  We don't want to make it so that if
 the user picks up a powerdown it's better to just sacrifice a life to
 clear it than to wait it out. Maybe we should let powerdowns persist
 across player death but just cut the remaining powerdown time in half
-- this way it is not very attractive to just dye to clear a powerdown
+- this way it is not very attractive to just die to clear a powerdown
 since it'll still be there, but if you do die at least the powerdown
 will soon be gone... dunno, needs more thought...
 
@@ -219,3 +219,27 @@ tend to keep people addicted longer ;-).
 
 ---
 
+Add highscore. Whenever a player loses her last life we should let her
+enter her name and save the score in the (sorted) highscore table. The
+highscore table must be accessible from the main menu and must display
+the top 100 scores. It should display "player name", "level reached",
+"score", "difficulty setting" (or perhaps have different highscore
+tables for different difficulty settings??); sorted by score. User
+must be able to scroll up-down the list, but should initially be shown
+the top entries.
+
+---
+
+When playing sound effects; If we have <= 2 effects, just play a
+random one of the available ones. If we have >2 effects for an action,
+play a random one, but never the same as the one we played last time
+(at least in 95% of cases or so), to give some variation.
+
+---
+
+It should be possible to specify background, background music, sound
+effects, tiles etc for a level. This way we can easily "theme" levels,
+so that for example levels 1-10 take place in a forest theme, levels
+11-20 are in a space setting, levels 21-30 are in a volcano theme
+etc. Even if the gameplay is the same, just varying graphics and audio
+will give the player something new every n levels.
