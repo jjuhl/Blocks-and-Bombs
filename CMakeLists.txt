@@ -1,6 +1,11 @@
 cmake_minimum_required(VERSION 2.6)
 project(BLOCKS_AND_BOMBS)
 
+# Default to Debug build if not told otherwise with eg. '-D CMAKE_BUILD_TYPE=Release'
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE Debug)
+endif(NOT CMAKE_BUILD_TYPE)
+
 find_package(SDL REQUIRED)
 include_directories(${SDL_INCLUDE_DIR})
 
@@ -11,6 +16,14 @@ find_package(SDL_ttf REQUIRED)
 include_directories(${SDLTTF_INCLUDE_DIR})
 
 find_program(ETAGS NAMES etags etags.emacs)
+
+# Extra flags for GCC
+if(CMAKE_COMPILER_IS_GNUCC)
+  add_definitions(-Wall -Wextra -Wabi -Wctor-dtor-privacy -Wnon-virtual-dtor -Wreorder -Weffc++ -Wold-style-cast -Wsign-promo -Wcast-qual)
+  set(CMAKE_CXX_FLAGS_DEBUG "-O0 -ggdb")
+  set(CMAKE_CXX_FLAGS_RELEASE "-O3 -ggdb")
+  set(CMAKE_SHARED_LINKER_FLAGS "-O 1")
+endif(CMAKE_COMPILER_IS_GNUCC)
 
 # The C++ source code
 set(SOURCES
