@@ -41,6 +41,11 @@ set(SOURCES
   effects.cc
   )
 
+if(WIN32 AND NOT UNIX)
+  # We do not care about Microsofts secure implementations of standard library functions
+  add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+endif(WIN32 AND NOT UNIX)
+
 # Create etags for emacs
 add_custom_target(etags
   COMMAND ${ETAGS} --declarations --ignore-indentation ${CMAKE_SOURCE_DIR}/*
@@ -58,3 +63,7 @@ add_executable(
    WIN32 # Avoid DOS prompt to appear in Windows
    ${SOURCES}
    )
+
+mark_as_advanced(
+  ETAGS
+)
