@@ -94,5 +94,5 @@ bool TextWriter::render(SDL_Surface* dest, SDL_Rect* dst, const std::string& tex
   int err = SDL_BlitSurface(text_surf, 0, dest, dst);
   SDL_FreeSurface(text_surf);
 
-  return err;
+  return !!err;
 }
