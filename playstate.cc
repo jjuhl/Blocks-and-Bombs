@@ -13,22 +13,20 @@
 #include "playstate.hh"
 #include "effects.hh"
 
-Board::Board(ResourceLoader& loader, Uint32 level)
-  : m_loader(loader), m_width(16), m_height(16), m_block_time(0)
+Board::Board(ResourceLoader& loader, Uint32)
+  : m_loader(loader), m_width(16), m_height(16),
+    m_grid(IMG_LoadDisplayFormat("resources/grid-square2.png")),
+    m_player(new Player(this, 14, 14)),
+    m_level(dynamic_cast<LevelResource*>(loader.load("resources/level-0001.res"))),
+    m_board(m_width * m_height), m_newObjects(), m_deadObjects(), m_freeTiles(),
+    m_block_time(0)
 {
-  m_grid = IMG_LoadDisplayFormat("resources/grid-square2.png");
-
-  m_board.resize(m_width * m_height);
   for (std::vector<GameObject*>::iterator it = m_board.begin();
        it != m_board.end(); ++it) {
     // XXX: We want to load a proper level here
     *it = 0;
   }
   srand(time(0));
-
-  m_level = dynamic_cast<LevelResource*>(loader.load("resources/level-0001.res"));
-
-  m_player = new Player(this, 14, 14);
 }
 
 Board::~Board()
@@ -286,12 +284,11 @@ bool Board::boxedIn() const
 
 Block::Block(Board* board, Uint16 x, Uint16 y, AnimationResource& anim, BLOCK_COLOR col,
              Sint32 timeout)
-  : GameObject(board, x, y), m_col(col), m_anim(anim), m_start_timeout(timeout),
+  : GameObject(board, x, y), m_col(col), m_anim(anim),
+    m_current_frame(m_anim.currentFrameSurface(0)),
+    m_current_frame_rect(m_anim.currentFrameRect(0)), m_start_timeout(timeout),
     m_timeout(m_start_timeout)
 {
-  m_current_frame = m_anim.currentFrameSurface(0);
-  m_current_frame_rect = m_anim.currentFrameRect(0);
-
   m_board->addGameObject(this);
 }
 
@@ -345,14 +342,13 @@ void Block::collision(GameObject* other)
 }
 
 Wall::Wall(Board* board, Uint16 x, Uint16 y)
-  : GameObject(board, x, y)
+  : GameObject(board, x, y), m_current_frame(IMG_LoadDisplayFormat("resources/wall.png")),
+    m_current_frame_rect()
 {
-  m_current_frame = IMG_LoadDisplayFormat("resources/wall.png");
   m_current_frame_rect.x = 0;
   m_current_frame_rect.y = 0;
   m_current_frame_rect.w = m_current_frame->w;
   m_current_frame_rect.h = m_current_frame->h;
-
   m_board->addGameObject(this);
 }
 
@@ -388,21 +384,17 @@ void Wall::collision(GameObject* other)
 
 Player::Player(Board* board, Uint16 x, Uint16 y)
   : GameObject(board, x, y),
-    m_direction(NONE), m_move_delay(120), m_time_since_move(0), m_top(RED),
-    m_bottom(PURPLE), m_up(BLUE), m_down(CYAN), m_left(GREEN), m_right(YELLOW),
+    m_direction(NONE), m_move_delay(120), m_time_since_move(0),
+    m_top(RED), m_bottom(PURPLE), m_up(BLUE), m_down(CYAN), m_left(GREEN),
+    m_right(YELLOW),
+    m_top_img(IMG_LoadDisplayFormat("resources/NEW-cube-top.png")),
+    m_up_img(IMG_LoadDisplayFormat("resources/NEW-cube-up.png")),
+    m_down_img(IMG_LoadDisplayFormat("resources/NEW-cube-down.png")),
+    m_left_img(IMG_LoadDisplayFormat("resources/NEW-cube-left.png")),
+    m_right_img(IMG_LoadDisplayFormat("resources/NEW-cube-right.png")),
+    m_frame(SDL_CreateRGBSurface(SDL_SWSURFACE|SDL_SRCALPHA, 32, 32, 32, 0, 0, 0, 0)),
     m_score(0), m_life(3)
 {
-  m_top_img = IMG_LoadDisplayFormat("resources/NEW-cube-top.png");
-  m_up_img = IMG_LoadDisplayFormat("resources/NEW-cube-up.png");
-  m_down_img = IMG_LoadDisplayFormat("resources/NEW-cube-down.png");
-  m_left_img = IMG_LoadDisplayFormat("resources/NEW-cube-left.png");
-  m_right_img = IMG_LoadDisplayFormat("resources/NEW-cube-right.png");
-
-  m_frame = SDL_CreateRGBSurface(SDL_SWSURFACE|SDL_SRCALPHA, 32, 32, 32,
-                                 0, 0, 0, 0);
-  if (!m_frame)
-    throw Exception("Unable to create frame surface for player: "
-                    + std::string(SDL_GetError()));
 }
 
 Player::~Player()
@@ -564,10 +556,11 @@ void Player::setEffects(const Effect& e)
 }
 
 PlayState::PlayState()
-  : m_board(m_resourceLoader, 1), m_paused(false)
+  : m_background(IMG_LoadDisplayFormat("resources/game-background.png")),
+    m_status_background(0), m_pause_background(0),
+    m_textWriter(new TextWriter("resources/whitrabt.ttf", 20)),
+    m_resourceLoader(), m_board(m_resourceLoader, 1), m_paused(false)
 {
-  m_background = IMG_LoadDisplayFormat("resources/game-background.png");
-
   Uint32 rmask, gmask, bmask, amask;
   // SDL interprets each pixel as a 32-bit number, so our masks must
   // depend on the endianness (byte order) of the machine
@@ -608,10 +601,8 @@ PlayState::PlayState()
   m_pause_background = SDL_DisplayFormatAlpha(tmp);
   SDL_FreeSurface(tmp);
 
-  m_textWriter = new TextWriter("resources/whitrabt.ttf", 20);
   SDL_Color col = { 50, 250, 50, 0 };
   m_textWriter->setFontColor(col);
-
 }
 
 PlayState::~PlayState()

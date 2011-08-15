@@ -32,6 +32,8 @@ public:
   Uint32 msPerFrame() const { return ms_per_frame; }
   AnimationResource& setMsPerFrame(Uint32 ms) { ms_per_frame = ms; return *this; }
 private:
+  AnimationResource(const AnimationResource&);
+  AnimationResource& operator=(const AnimationResource&);
   Sint16 frame_w;
   Sint16 frame_h;
   Uint32 initial_ms_per_frame;

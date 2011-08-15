@@ -9,16 +9,16 @@ HighscoreState::~HighscoreState()
 {
 }
 
-STATE_CHANGE HighscoreState::handleKey(const SDL_KeyboardEvent& key)
+STATE_CHANGE HighscoreState::handleKey(const SDL_KeyboardEvent&)
 {
   return NO_CHANGE;
 }
 
-STATE_CHANGE  HighscoreState::update(Uint32 delta_time)
+STATE_CHANGE  HighscoreState::update(Uint32)
 {
   return NO_CHANGE;
 }
 
-void HighscoreState::draw(SDL_Surface* screen)
+void HighscoreState::draw(SDL_Surface*)
 {
 }

@@ -40,6 +40,8 @@ public:
   ResourceLoader& loader() { return m_loader; }
 
 private:
+  Board(const Board&);
+  Board& operator=(const Board&);
   bool boxedIn() const;
   ResourceLoader m_loader;
   Uint16 m_width;
@@ -89,6 +91,9 @@ protected:
   Board* m_board;
   Uint16 m_x;
   Uint16 m_y;
+private:
+  GameObject(const GameObject&);
+  GameObject& operator=(const GameObject&);
 };
 
 class Block : public GameObject {
@@ -103,6 +108,8 @@ public:
   virtual void draw(SDL_Surface** surface, SDL_Rect* rect);
   virtual void collision(GameObject* other);
 private:
+  Block(const Block&);
+  Block& operator=(const Block&);
   BLOCK_COLOR m_col;
   AnimationResource& m_anim;
   SDL_Surface* m_current_frame;
@@ -123,6 +130,8 @@ public:
   virtual bool isBlocked() { return true; }
 
 private:
+  Wall(const Wall&);
+  Wall& operator=(const Wall&);
   SDL_Surface* m_current_frame;
   SDL_Rect m_current_frame_rect;
 };
@@ -157,6 +166,8 @@ public:
   Uint16 livesLeft() const { return m_life; }
 
 private:
+  Player(const Player&);
+  Player& operator=(const Player&);
   PLAYER_DIRECTION m_direction;
 
   Uint32 m_move_delay;
@@ -193,6 +204,8 @@ public:
   void draw(SDL_Surface* screen);
   bool isPaused() const { return m_paused; }
 private:
+  PlayState(const PlayState&);
+  PlayState& operator=(const PlayState&);
   void drawScore(SDL_Surface* screen);
   void drawStatusArea(SDL_Surface* screen);
   void updatePause();

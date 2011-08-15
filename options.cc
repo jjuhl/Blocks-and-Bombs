@@ -3,6 +3,7 @@
 #include "options.hh"
 
 Options::Options(int argc, char** argv)
+  : m_options()
 {
   int i = 0;
   while (i != argc) {

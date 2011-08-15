@@ -4,20 +4,15 @@
 #include <list>
 #include "except.hh"
 #include "textwriter.hh"
+#include "resources.hh"
 #include "menustate.hh"
 
 MenuState::MenuState()
+  : m_background(IMG_LoadDisplayFormat("resources/menu-background.png")),
+    m_textWriter(new TextWriter("resources/whitrabt.ttf", 40)), m_items()
 {
-  SDL_Surface* tmp = IMG_Load("resources/menu-background.png");
-  if (!tmp)
-    throw Exception("Failed to load menu background: " + std::string(IMG_GetError()));
-
-  m_background = SDL_DisplayFormatAlpha(tmp);
-  SDL_FreeSurface(tmp);
   if (!m_background)
-    throw Exception("Failed to convert menu background: " + std::string(IMG_GetError()));
-
-  m_textWriter = new TextWriter("resources/whitrabt.ttf", 40);
+    throw Exception("Failed to load menu background: " + std::string(IMG_GetError()));
 
   // Build the menu
   m_items.push_back(MenuItem("New Game", COLOR_OF_ACTIVE, true, NEW_GAME));

@@ -18,6 +18,8 @@ public:
   STATE_CHANGE update(Uint32 delta_time);
   void draw(SDL_Surface* screen);
 private:
+  MenuState(const MenuState&);
+  MenuState& operator=(const MenuState&);
   SDL_Surface* m_background;
   TextWriter* m_textWriter;
 

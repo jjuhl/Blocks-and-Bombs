@@ -12,7 +12,7 @@
 #include "bbengine.hh"
 
 BBEngine::BBEngine(int width, int height, int bpp)
-  : m_updateTimer(0), m_lastUpdate(SDL_GetTicks()), m_currentState(0)
+  : m_updateTimer(0), m_screen(0), m_lastUpdate(SDL_GetTicks()), m_currentState(0)
 {
   m_screen = SDL_SetVideoMode(width, height, bpp, SDL_SWSURFACE);
   if (!m_screen)

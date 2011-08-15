@@ -10,22 +10,18 @@
 #include "resources.hh"
 
 AnimationResource::AnimationResource(std::map<std::string, std::string>& properties)
-  : Resource(properties["name"]), current_frame(0), current_frame_off(0),
+  : Resource(properties["name"]), frame_w(strtoul(properties["width"].c_str(), 0, 10)),
+    frame_h(strtoul(properties["height"].c_str(), 0, 10)),
+    initial_ms_per_frame(strtoul(properties["ms_per_frame"].c_str(), 0, 10)),
+    ms_per_frame(initial_ms_per_frame), loop_type(NONE),
+    anim(IMG_LoadDisplayFormat(properties["frames"].c_str())),
+    current_frame(0), current_frame_off(0), last_frame(anim->w / frame_w - 1),
     moving_forward(true)
 {
-  frame_w = strtoul(properties["width"].c_str(), 0, 10);
-  frame_h = strtoul(properties["height"].c_str(), 0, 10);
-  initial_ms_per_frame = strtoul(properties["ms_per_frame"].c_str(), 0, 10);
-  ms_per_frame = initial_ms_per_frame;
-  loop_type = NONE;
   if (!strcmp(properties["loop_type"].c_str(), "loop"))
     loop_type = LOOP;
   else if (!strcmp(properties["loop_type"].c_str(), "pingpong"))
     loop_type = PINGPONG;
-
-  anim = IMG_LoadDisplayFormat(properties["frames"].c_str());
-
-  last_frame = anim->w / frame_w - 1;
 }
 
 SDL_Rect AnimationResource::currentFrameRect(Uint32 delta_time)
@@ -84,10 +80,12 @@ SDL_Rect AnimationResource::currentFrameRect(Uint32 delta_time)
 }
 
 LevelResource::LevelResource(const std::string& name,
-                             std::map<std::string, std::string>& properties,
-                             const std::vector<unsigned char>& level_map)
+                             std::map<std::string, std::string>&,
+                             const std::vector<unsigned char>&)
   : Resource(name), m_block_to_wall_delay(10000), m_delay_between_blocks(5500),
-    m_successful_pickup_delay_reduction(25), m_failed_pickup_delay_reduction(120)
+    m_successful_pickup_delay_reduction(25), m_failed_pickup_delay_reduction(120),
+    m_red_left(0), m_green_left(0), m_blue_left(0), m_purple_left(0),
+    m_yellow_left(0), m_cyan_left(0), m_arbitrary_left(0)
 {
 }
 
@@ -134,6 +132,27 @@ void LevelResource::blockPickup(BLOCK_COLOR col)
   m_delay_between_blocks -= m_successful_pickup_delay_reduction * 1.1;
   if (m_delay_between_blocks > old_delay)
     m_delay_between_blocks = 0;
+
+  switch (col) {
+  case RED:
+    --m_red_left;
+    break;
+  case GREEN:
+    --m_green_left;
+    break;
+  case BLUE:
+    --m_blue_left;
+    break;
+  case YELLOW:
+    --m_yellow_left;
+    break;
+  case PURPLE:
+    --m_purple_left;
+    break;
+  case CYAN:
+    --m_cyan_left;
+    break;
+  }
 }
 
 void LevelResource::failedBlockPickup()

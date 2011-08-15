@@ -19,6 +19,8 @@ public:
   int exec();
 
 private:
+  BBEngine(const BBEngine&);
+  BBEngine& operator=(const BBEngine&);
   void changeStateTo(enum STATE_CHANGE new_state);
   SDL_TimerID m_updateTimer;
   SDL_Surface* m_screen;

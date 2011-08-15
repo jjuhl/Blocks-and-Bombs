@@ -9,16 +9,16 @@ HelpState::~HelpState()
 {
 }
 
-STATE_CHANGE HelpState::handleKey(const SDL_KeyboardEvent& key)
+STATE_CHANGE HelpState::handleKey(const SDL_KeyboardEvent&)
 {
   return NO_CHANGE;
 }
 
-STATE_CHANGE HelpState::update(Uint32 delta_time)
+STATE_CHANGE HelpState::update(Uint32)
 {
   return NO_CHANGE;
 }
 
-void HelpState::draw(SDL_Surface* screen)
+void HelpState::draw(SDL_Surface*)
 {
 }

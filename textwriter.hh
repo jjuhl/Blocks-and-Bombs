@@ -66,6 +66,8 @@ public:
   bool render(SDL_Surface* dest, SDL_Rect* dst, const std::string& text);
 
 private:
+  TextWriter(const TextWriter&);
+  TextWriter& operator=(const TextWriter&);
   const std::string m_fontFile;
   RENDER_MODE m_mode;
   TTF_Font* m_font;

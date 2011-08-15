@@ -6,13 +6,12 @@
 #include "textwriter.hh"
 
 TextWriter::TextWriter(const std::string& font, int ptsize)
-  : m_fontFile(font), m_mode(BLENDED)
+  : m_fontFile(font), m_mode(BLENDED), m_font(TTF_OpenFont(m_fontFile.c_str(), ptsize)),
+    m_color()
 {
-  m_font = TTF_OpenFont(m_fontFile.c_str(), ptsize);
   if (!m_font)
     throw Exception("Unable to open font '" + m_fontFile + "': "
                     + std::string(TTF_GetError()));
-  memset(&m_color, 0, sizeof(m_color));
 }
 
 TextWriter::~TextWriter()
