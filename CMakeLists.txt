@@ -49,7 +49,7 @@ endif(WIN32 AND NOT UNIX)
 # Create etags for emacs
 add_custom_target(etags
   COMMAND ${ETAGS} --declarations --ignore-indentation ${CMAKE_SOURCE_DIR}/*
-  COMMAND mv TAGS ${CMAKE_SOURCE_DIR}
+  COMMAND mv -f TAGS ${CMAKE_SOURCE_DIR}
   )
 
 link_libraries(
