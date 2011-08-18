@@ -5,10 +5,11 @@
 #include "except.hh"
 #include "textwriter.hh"
 #include "menustate.hh"
+#include "config.h"
 
 MenuState::MenuState()
 {
-  SDL_Surface* tmp = IMG_Load("resources/menu-background.png");
+  SDL_Surface* tmp = IMG_Load(RESOURCES_DIR"images/menu-background.png");
   if (!tmp)
     throw Exception("Failed to load menu background: " + std::string(IMG_GetError()));
 
@@ -17,7 +18,7 @@ MenuState::MenuState()
   if (!m_background)
     throw Exception("Failed to convert menu background: " + std::string(IMG_GetError()));
 
-  m_textWriter = new TextWriter("resources/whitrabt.ttf", 40);
+  m_textWriter = new TextWriter(RESOURCES_DIR"fonts/whitrabt.ttf", 40);
 
   // Build the menu
   m_items.push_back(MenuItem("New Game", COLOR_OF_ACTIVE, true, NEW_GAME));

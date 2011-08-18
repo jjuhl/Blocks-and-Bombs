@@ -12,11 +12,12 @@
 #include "resources.hh"
 #include "playstate.hh"
 #include "effects.hh"
+#include "config.h"
 
 Board::Board(ResourceLoader& loader, Uint32 level)
   : m_loader(loader), m_width(16), m_height(16), m_block_time(0)
 {
-  m_grid = IMG_LoadDisplayFormat("resources/grid-square2.png");
+  m_grid = IMG_LoadDisplayFormat("grid-square2.png");
 
   m_board.resize(m_width * m_height);
   for (std::vector<GameObject*>::iterator it = m_board.begin();
@@ -26,7 +27,7 @@ Board::Board(ResourceLoader& loader, Uint32 level)
   }
   srand(time(0));
 
-  m_level = dynamic_cast<LevelResource*>(loader.load("resources/level-0001.res"));
+  m_level = dynamic_cast<LevelResource*>(loader.load("levels/level-0001.res"));
 
   m_player = new Player(this, 14, 14);
 }
@@ -202,32 +203,32 @@ void Board::newBlock()
     switch (rand() % 6) {
     case 0:
       new Block(this, new_block.first, new_block.second,
-                *dynamic_cast<AnimationResource*>(loader().load("resources/red-animation.res")),
+                *dynamic_cast<AnimationResource*>(loader().load("animations/red-animation.res")),
                 RED, m_level->blockToWallDelay());
       break;
     case 1:
       new Block(this, new_block.first, new_block.second,
-                *dynamic_cast<AnimationResource*>(loader().load("resources/green-animation.res")),
+                *dynamic_cast<AnimationResource*>(loader().load("animations/green-animation.res")),
                 GREEN, m_level->blockToWallDelay());
       break;
     case 2:
       new Block(this, new_block.first, new_block.second,
-                *dynamic_cast<AnimationResource*>(loader().load("resources/blue-animation.res")),
+                *dynamic_cast<AnimationResource*>(loader().load("animations/blue-animation.res")),
                 BLUE, m_level->blockToWallDelay());
       break;
     case 3:
       new Block(this, new_block.first, new_block.second,
-                *dynamic_cast<AnimationResource*>(loader().load("resources/yellow-animation.res")),
+                *dynamic_cast<AnimationResource*>(loader().load("animations/yellow-animation.res")),
                 YELLOW, m_level->blockToWallDelay());
       break;
     case 4:
       new Block(this, new_block.first, new_block.second,
-                *dynamic_cast<AnimationResource*>(loader().load("resources/purple-animation.res")),
+                *dynamic_cast<AnimationResource*>(loader().load("animations/purple-animation.res")),
                 PURPLE, m_level->blockToWallDelay());
       break;
     case 5:
       new Block(this, new_block.first, new_block.second,
-                *dynamic_cast<AnimationResource*>(loader().load("resources/cyan-animation.res")),
+                *dynamic_cast<AnimationResource*>(loader().load("animations/cyan-animation.res")),
                 CYAN, m_level->blockToWallDelay());
       break;
     }
@@ -347,7 +348,7 @@ void Block::collision(GameObject* other)
 Wall::Wall(Board* board, Uint16 x, Uint16 y)
   : GameObject(board, x, y)
 {
-  m_current_frame = IMG_LoadDisplayFormat("resources/wall.png");
+  m_current_frame = IMG_LoadDisplayFormat("wall.png");
   m_current_frame_rect.x = 0;
   m_current_frame_rect.y = 0;
   m_current_frame_rect.w = m_current_frame->w;
@@ -392,11 +393,11 @@ Player::Player(Board* board, Uint16 x, Uint16 y)
     m_bottom(PURPLE), m_up(BLUE), m_down(CYAN), m_left(GREEN), m_right(YELLOW),
     m_score(0), m_life(3)
 {
-  m_top_img = IMG_LoadDisplayFormat("resources/NEW-cube-top.png");
-  m_up_img = IMG_LoadDisplayFormat("resources/NEW-cube-up.png");
-  m_down_img = IMG_LoadDisplayFormat("resources/NEW-cube-down.png");
-  m_left_img = IMG_LoadDisplayFormat("resources/NEW-cube-left.png");
-  m_right_img = IMG_LoadDisplayFormat("resources/NEW-cube-right.png");
+  m_top_img = IMG_LoadDisplayFormat("NEW-cube-top.png");
+  m_up_img = IMG_LoadDisplayFormat("NEW-cube-up.png");
+  m_down_img = IMG_LoadDisplayFormat("NEW-cube-down.png");
+  m_left_img = IMG_LoadDisplayFormat("NEW-cube-left.png");
+  m_right_img = IMG_LoadDisplayFormat("NEW-cube-right.png");
 
   m_frame = SDL_CreateRGBSurface(SDL_SWSURFACE|SDL_SRCALPHA, 32, 32, 32,
                                  0, 0, 0, 0);
@@ -566,7 +567,7 @@ void Player::setEffects(const Effect& e)
 PlayState::PlayState()
   : m_board(m_resourceLoader, 1), m_paused(false)
 {
-  m_background = IMG_LoadDisplayFormat("resources/game-background.png");
+  m_background = IMG_LoadDisplayFormat("game-background.png");
 
   Uint32 rmask, gmask, bmask, amask;
   // SDL interprets each pixel as a 32-bit number, so our masks must
@@ -608,7 +609,7 @@ PlayState::PlayState()
   m_pause_background = SDL_DisplayFormatAlpha(tmp);
   SDL_FreeSurface(tmp);
 
-  m_textWriter = new TextWriter("resources/whitrabt.ttf", 20);
+  m_textWriter = new TextWriter(RESOURCES_DIR"fonts/whitrabt.ttf", 20);
   SDL_Color col = { 50, 250, 50, 0 };
   m_textWriter->setFontColor(col);
 

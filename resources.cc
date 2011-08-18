@@ -8,6 +8,7 @@
 #include <SDL_image.h>
 #include "except.hh"
 #include "resources.hh"
+#include "config.h"
 
 AnimationResource::AnimationResource(std::map<std::string, std::string>& properties)
   : Resource(properties["name"]), current_frame(0), current_frame_off(0),
@@ -153,7 +154,7 @@ Resource* ResourceLoader::load(const std::string& resource_name)
 {
   // XXX: Hack
 
-  if (resource_name == "resources/level-0001.res") {
+  if (resource_name == "levels/level-0001.res") {
     std::map<std::string, std::string> a;
     std::vector<unsigned char> b;
     return new LevelResource("level-0001", a, b);
@@ -161,8 +162,10 @@ Resource* ResourceLoader::load(const std::string& resource_name)
 
   std::map<std::string, std::string> properties;
 
+  std::string resource_filename = std::string(RESOURCES_DIR) + resource_name;
+
   std::string line;
-  std::ifstream file(resource_name.c_str());
+  std::ifstream file(resource_filename.c_str());
   while (std::getline(file, line)) {
     std::string token;
     std::istringstream tokens(line);
@@ -187,14 +190,15 @@ void ResourceLoader::unload(Resource* res)
 
 SDL_Surface* IMG_LoadDisplayFormat(const std::string& file)
 {
-  SDL_Surface* tmp = IMG_Load(file.c_str());
+  std::string filename = std::string(RESOURCES_DIR) + "images/" + file;
+  SDL_Surface* tmp = IMG_Load(filename.c_str());
   if (!tmp)
-    throw Exception("Failed to image '" + file + "': " + std::string(IMG_GetError()));
+    throw Exception("Failed to load image '" + filename + "': " + std::string(IMG_GetError()));
 
   SDL_Surface* ret = SDL_DisplayFormatAlpha(tmp);
   SDL_FreeSurface(tmp);
   if (!ret)
-    throw Exception("Failed to convert image '" + file + "': " + std::string(IMG_GetError()));
+    throw Exception("Failed to convert image '" + filename + "': " + std::string(IMG_GetError()));
 
   return ret;
 }
