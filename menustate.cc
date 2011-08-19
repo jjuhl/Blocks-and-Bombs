@@ -6,9 +6,10 @@
 #include "textwriter.hh"
 #include "resources.hh"
 #include "menustate.hh"
+#include "config.h"
 
 MenuState::MenuState()
-  : m_background(IMG_LoadDisplayFormat("resources/menu-background.png")),
+  : m_background(IMG_LoadDisplayFormat(RESOURCES_DIR"images/menu-background.png")),
     m_textWriter(new TextWriter("resources/whitrabt.ttf", 40)), m_items()
 {
   if (!m_background)

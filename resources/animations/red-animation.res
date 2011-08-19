@@ -3,4 +3,4 @@ width=32
 height=32
 ms_per_frame=120
 loop_type=pingpong
-frames=./resources/cyan-block.png
+frames=red-block.png

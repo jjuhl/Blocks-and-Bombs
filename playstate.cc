@@ -12,12 +12,13 @@
 #include "resources.hh"
 #include "playstate.hh"
 #include "effects.hh"
+#include "config.h"
 
 Board::Board(ResourceLoader& loader, Uint32)
   : m_loader(loader), m_width(16), m_height(16),
-    m_grid(IMG_LoadDisplayFormat("resources/grid-square2.png")),
+    m_grid(IMG_LoadDisplayFormat("grid-square2.png")),
     m_player(new Player(this, 14, 14)),
-    m_level(dynamic_cast<LevelResource*>(loader.load("resources/level-0001.res"))),
+    m_level(dynamic_cast<LevelResource*>(loader.load("levels/level-0001.res"))),
     m_board(m_width * m_height), m_newObjects(), m_deadObjects(), m_freeTiles(),
     m_block_time(0)
 {
@@ -200,32 +201,32 @@ void Board::newBlock()
     switch (rand() % 6) {
     case 0:
       new Block(this, new_block.first, new_block.second,
-                *dynamic_cast<AnimationResource*>(loader().load("resources/red-animation.res")),
+                *dynamic_cast<AnimationResource*>(loader().load("animations/red-animation.res")),
                 RED, m_level->blockToWallDelay());
       break;
     case 1:
       new Block(this, new_block.first, new_block.second,
-                *dynamic_cast<AnimationResource*>(loader().load("resources/green-animation.res")),
+                *dynamic_cast<AnimationResource*>(loader().load("animations/green-animation.res")),
                 GREEN, m_level->blockToWallDelay());
       break;
     case 2:
       new Block(this, new_block.first, new_block.second,
-                *dynamic_cast<AnimationResource*>(loader().load("resources/blue-animation.res")),
+                *dynamic_cast<AnimationResource*>(loader().load("animations/blue-animation.res")),
                 BLUE, m_level->blockToWallDelay());
       break;
     case 3:
       new Block(this, new_block.first, new_block.second,
-                *dynamic_cast<AnimationResource*>(loader().load("resources/yellow-animation.res")),
+                *dynamic_cast<AnimationResource*>(loader().load("animations/yellow-animation.res")),
                 YELLOW, m_level->blockToWallDelay());
       break;
     case 4:
       new Block(this, new_block.first, new_block.second,
-                *dynamic_cast<AnimationResource*>(loader().load("resources/purple-animation.res")),
+                *dynamic_cast<AnimationResource*>(loader().load("animations/purple-animation.res")),
                 PURPLE, m_level->blockToWallDelay());
       break;
     case 5:
       new Block(this, new_block.first, new_block.second,
-                *dynamic_cast<AnimationResource*>(loader().load("resources/cyan-animation.res")),
+                *dynamic_cast<AnimationResource*>(loader().load("animations/cyan-animation.res")),
                 CYAN, m_level->blockToWallDelay());
       break;
     }
@@ -342,7 +343,7 @@ void Block::collision(GameObject* other)
 }
 
 Wall::Wall(Board* board, Uint16 x, Uint16 y)
-  : GameObject(board, x, y), m_current_frame(IMG_LoadDisplayFormat("resources/wall.png")),
+  : GameObject(board, x, y), m_current_frame(IMG_LoadDisplayFormat("wall.png")),
     m_current_frame_rect()
 {
   m_current_frame_rect.x = 0;
@@ -387,14 +388,17 @@ Player::Player(Board* board, Uint16 x, Uint16 y)
     m_direction(NONE), m_move_delay(120), m_time_since_move(0),
     m_top(RED), m_bottom(PURPLE), m_up(BLUE), m_down(CYAN), m_left(GREEN),
     m_right(YELLOW),
-    m_top_img(IMG_LoadDisplayFormat("resources/NEW-cube-top.png")),
-    m_up_img(IMG_LoadDisplayFormat("resources/NEW-cube-up.png")),
-    m_down_img(IMG_LoadDisplayFormat("resources/NEW-cube-down.png")),
-    m_left_img(IMG_LoadDisplayFormat("resources/NEW-cube-left.png")),
-    m_right_img(IMG_LoadDisplayFormat("resources/NEW-cube-right.png")),
+    m_top_img(IMG_LoadDisplayFormat("NEW-cube-top.png")),
+    m_up_img(IMG_LoadDisplayFormat("NEW-cube-up.png")),
+    m_down_img(IMG_LoadDisplayFormat("NEW-cube-down.png")),
+    m_left_img(IMG_LoadDisplayFormat("NEW-cube-left.png")),
+    m_right_img(IMG_LoadDisplayFormat("NEW-cube-right.png")),
     m_frame(SDL_CreateRGBSurface(SDL_SWSURFACE|SDL_SRCALPHA, 32, 32, 32, 0, 0, 0, 0)),
     m_score(0), m_life(3)
 {
+  if (!m_frame)
+    throw Exception("Unable to create frame surface for player: "
+                    + std::string(SDL_GetError()));
 }
 
 Player::~Player()
@@ -556,9 +560,9 @@ void Player::setEffects(const Effect& e)
 }
 
 PlayState::PlayState()
-  : m_background(IMG_LoadDisplayFormat("resources/game-background.png")),
+  : m_background(IMG_LoadDisplayFormat("game-background.png")),
     m_status_background(0), m_pause_background(0),
-    m_textWriter(new TextWriter("resources/whitrabt.ttf", 20)),
+    m_textWriter(new TextWriter(RESOURCES_DIR"fonts/whitrabt.ttf", 20)),
     m_resourceLoader(), m_board(m_resourceLoader, 1), m_paused(false)
 {
   Uint32 rmask, gmask, bmask, amask;

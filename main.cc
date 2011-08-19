@@ -3,6 +3,7 @@
 #include <SDL.h>
 #include "options.hh"
 #include "bbengine.hh"
+#include "config.h"
 
 // ensure that SDL is always shut down properly, no matter how we terminate
 class SDLQuit {
@@ -27,7 +28,7 @@ int main(int argc, char** argv)
 
   SDL_WM_SetCaption("Blocks and Bombs", "Blocks and Bombs");
   // Setting the icon must happen before SDL_SetVideoMode
-  SDL_Surface* icon = SDL_LoadBMP("resources/icon.bmp");
+  SDL_Surface* icon = SDL_LoadBMP(RESOURCES_DIR"images/icon.bmp");
   if (icon) {
     SDL_WM_SetIcon(icon, NULL);
     SDL_FreeSurface(icon);
