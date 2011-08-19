@@ -12,7 +12,7 @@ public:
   ~SDLQuit() { SDL_Quit(); }
 };
 
-int main()
+int main(int argc, char* argv[])
 {
   Uint32 sdl_flags = SDL_INIT_TIMER|SDL_INIT_VIDEO;
   int err = SDL_Init(sdl_flags);
