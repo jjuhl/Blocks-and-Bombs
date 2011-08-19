@@ -1,12 +1,32 @@
 Blocks and Bombs
------
+----------------
 
 A puzzle game with colours.
 
-All files in this project are licensed under the terms of the GNU
-General Public License (GPL) version 2.
+
+Licensing
+-----
+
+All files in this project/repository are licensed under the terms of
+the GNU General Public License (GPL) version 2.
 
 Just to be clear: The license is GPLv2, *not* any earlier or later
 version.
 
 Please see the COPYING file for license details.
+
+
+Building the game
+-----
+
+To build a debug build of the game on Linux do this:
+
+$ mkdir build
+$ cd build
+$ cmake ../
+$ make
+
+You can then run the game with ./blocks-and-bombs
+
+Build instructions for non-debug and other platforms will be written
+at a later date.
