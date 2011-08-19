@@ -16,7 +16,7 @@
 
 Board::Board(ResourceLoader& loader, Uint32)
   : m_loader(loader), m_width(16), m_height(16),
-    m_grid(IMG_LoadDisplayFormat("grid-square2.png")),
+    m_grid(IMG_LoadDisplayFormat("grid-square.png")),
     m_player(new Player(this, 14, 14)),
     m_level(dynamic_cast<LevelResource*>(loader.load("levels/level-0001.res"))),
     m_board(m_width * m_height), m_newObjects(), m_deadObjects(), m_freeTiles(),
@@ -388,11 +388,11 @@ Player::Player(Board* board, Uint16 x, Uint16 y)
     m_direction(NONE), m_move_delay(120), m_time_since_move(0),
     m_top(RED), m_bottom(PURPLE), m_up(BLUE), m_down(CYAN), m_left(GREEN),
     m_right(YELLOW),
-    m_top_img(IMG_LoadDisplayFormat("NEW-cube-top.png")),
-    m_up_img(IMG_LoadDisplayFormat("NEW-cube-up.png")),
-    m_down_img(IMG_LoadDisplayFormat("NEW-cube-down.png")),
-    m_left_img(IMG_LoadDisplayFormat("NEW-cube-left.png")),
-    m_right_img(IMG_LoadDisplayFormat("NEW-cube-right.png")),
+    m_top_img(IMG_LoadDisplayFormat("cube-top.png")),
+    m_up_img(IMG_LoadDisplayFormat("cube-up.png")),
+    m_down_img(IMG_LoadDisplayFormat("cube-down.png")),
+    m_left_img(IMG_LoadDisplayFormat("cube-left.png")),
+    m_right_img(IMG_LoadDisplayFormat("cube-right.png")),
     m_frame(SDL_CreateRGBSurface(SDL_SWSURFACE|SDL_SRCALPHA, 32, 32, 32, 0, 0, 0, 0)),
     m_score(0), m_life(3)
 {
