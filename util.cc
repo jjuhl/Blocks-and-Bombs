@@ -43,7 +43,7 @@ namespace util {
 
   std::string vfmt2str(const char* fmt, va_list vl)
   {
-    size_t size = 1024;
+    const size_t size = 1024;
     std::vector<char> buf;
     buf.resize(size);
 
