@@ -9,8 +9,8 @@
 #include "config.h"
 
 MenuState::MenuState()
-  : m_background(IMG_LoadDisplayFormat(RESOURCES_DIR"images/menu-background.png")),
-    m_textWriter(new TextWriter("resources/whitrabt.ttf", 40)), m_items()
+  : m_background(IMG_LoadDisplayFormat("menu-background.png")),
+    m_textWriter(new TextWriter("whitrabt.ttf", 40)), m_items()
 {
   if (!m_background)
     throw Exception("Failed to load menu background: " + std::string(IMG_GetError()));

@@ -4,10 +4,11 @@
 #include <SDL_ttf.h>
 #include "except.hh"
 #include "textwriter.hh"
+#include "config.h"
 
 TextWriter::TextWriter(const std::string& font, int ptsize)
-  : m_fontFile(font), m_mode(BLENDED), m_font(TTF_OpenFont(m_fontFile.c_str(), ptsize)),
-    m_color()
+  : m_fontFile(RESOURCES_DIR"/fonts/" + font), m_mode(BLENDED), m_font(TTF_OpenFont(m_fontFile.c_str(),
+                                                           ptsize)), m_color()
 {
   if (!m_font)
     throw Exception("Unable to open font '" + m_fontFile + "': "

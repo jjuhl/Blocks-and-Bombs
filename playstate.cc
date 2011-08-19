@@ -562,7 +562,7 @@ void Player::setEffects(const Effect& e)
 PlayState::PlayState()
   : m_background(IMG_LoadDisplayFormat("game-background.png")),
     m_status_background(0), m_pause_background(0),
-    m_textWriter(new TextWriter(RESOURCES_DIR"fonts/whitrabt.ttf", 20)),
+    m_textWriter(new TextWriter("whitrabt.ttf", 20)),
     m_resourceLoader(), m_board(m_resourceLoader, 1), m_paused(false)
 {
   Uint32 rmask, gmask, bmask, amask;

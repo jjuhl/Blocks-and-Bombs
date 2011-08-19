@@ -9,6 +9,20 @@ endif(NOT CMAKE_BUILD_TYPE)
 # Set this to be a development build. Resources will be found relative to the source dir.
 set(DEVELOPMENT_BUILD ON)
 
+include(FindPkgConfig)
+if(NOT PKG_CONFIG_FOUND)
+    message(FATAL_ERROR "pkg-config not found")
+else(NOT PKG_CONFIG_FOUND)
+    pkg_search_module(LIBCONFIGPP libconfig++)
+    if(NOT LIBCONFIGPP_FOUND)
+        set(LIBCONFIG_CXXFLAGS "" CACHE STRING "libconfig++ compiler flags")
+        set(LIBCONFIG_LDFLAGS "" CACHE STRING "libconfig++ linker flags")
+    else(NOT LIBCONFIGPP_FOUND)
+        set(LIBCONFIG_CXXFLAGS ${LIBCONFIGPP_CFLAGS} CACHE STRING "libconfig++ compiler flags")
+        set(LIBCONFIG_LDFLAGS ${LIBCONFIGPP_LDFLAGS} CACHE STRING "libconfig++ linker flags")
+    endif(NOT LIBCONFIGPP_FOUND)
+endif(NOT PKG_CONFIG_FOUND)
+
 find_package(SDL REQUIRED)
 include_directories(${SDL_INCLUDE_DIR})
 
@@ -23,9 +37,8 @@ find_program(ETAGS NAMES etags etags.emacs)
 # Extra flags for GCC
 if(CMAKE_COMPILER_IS_GNUCC)
   add_definitions(-Wall -Wextra -Wabi -Wctor-dtor-privacy -Wnon-virtual-dtor -Wreorder -Weffc++ -Wold-style-cast -Wsign-promo -Wcast-qual)
-  set(CMAKE_CXX_FLAGS_DEBUG "-O0 -ggdb")
-  set(CMAKE_CXX_FLAGS_RELEASE "-O3 -ggdb")
-  set(CMAKE_SHARED_LINKER_FLAGS "-O 1")
+  set(CMAKE_CXX_FLAGS_DEBUG "-O0 -ggdb ${LIBCONFIG_CXXFLAGS}")
+  set(CMAKE_CXX_FLAGS_RELEASE "-O3 -ggdb ${LIBCONFIG_CXXFLAGS}")
 endif(CMAKE_COMPILER_IS_GNUCC)
 
 include_directories(${CMAKE_BINARY_DIR}/)
@@ -34,7 +47,6 @@ include_directories(${CMAKE_BINARY_DIR}/)
 set(SOURCES
   main.cc
   except.cc
-  options.cc
   util.cc
   bbengine.cc
   menustate.cc
@@ -61,6 +73,7 @@ link_libraries(
    ${SDL_LIBRARY}
    ${SDLIMAGE_LIBRARY}
    ${SDLTTF_LIBRARY}
+   ${LIBCONFIG_LDFLAGS}
    )
 
 add_executable(

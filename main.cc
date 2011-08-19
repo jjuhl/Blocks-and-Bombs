@@ -1,7 +1,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <SDL.h>
-#include "options.hh"
+#include <libconfig.h++>
 #include "bbengine.hh"
 #include "config.h"
 
@@ -12,13 +12,9 @@ public:
   ~SDLQuit() { SDL_Quit(); }
 };
 
-int main(int argc, char** argv)
+int main()
 {
-  Options my_options(argc, argv);
-
   Uint32 sdl_flags = SDL_INIT_TIMER|SDL_INIT_VIDEO;
-  if (!my_options.hasOption("nosound"))
-    sdl_flags |= SDL_INIT_AUDIO;
   int err = SDL_Init(sdl_flags);
   if (err) {
     std::cerr << "Unable to initialize SDL: " << SDL_GetError() << std::endl;
