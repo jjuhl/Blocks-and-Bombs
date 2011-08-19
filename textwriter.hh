@@ -1,7 +1,10 @@
 /*
-  This class is intended to encapsulate all text writing with TTF
-  fonts for use in the BNBEngine.
-  TTF_Init() must have been called before instantiating this class.
+ * This class is intended to encapsulate all text writing with TTF
+ * fonts for use in the BNBEngine.
+ * TTF_Init() must have been called before instantiating this class.
+ *
+ * Copyright © 2011 by Jesper Juhl
+ * Licensed under the terms of the GNU General Public Licence (GPL) version 2.
  */
 
 #ifndef BNB_TEXTWRITER_HH
