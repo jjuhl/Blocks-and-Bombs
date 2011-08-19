@@ -38,15 +38,20 @@ Board::~Board()
 
 void Board::addGameObject(GameObject* new_obj)
 {
-    m_newObjects.insert(new_obj);
-    m_freeTiles.erase(std::remove(m_freeTiles.begin(), m_freeTiles.end(),
-                                  std::make_pair(new_obj->x(), new_obj->y())),
-                      m_freeTiles.end());
+  // no more free tiles? too bad, too sad...
+  if (m_freeTiles.empty())
+    return;
+
+  m_newObjects.insert(new_obj);
+  m_freeTiles.erase(std::remove(m_freeTiles.begin(), m_freeTiles.end(),
+                                std::make_pair(new_obj->x(), new_obj->y())),
+                    m_freeTiles.end());
 }
 
 void Board::removeGameObject(GameObject* dead_obj)
 {
   m_deadObjects.insert(dead_obj);
+  m_freeTiles.push_back(std::make_pair(dead_obj->x(), dead_obj->y()));
 }
 
 void Board::update(Uint32 delta_time)
@@ -114,7 +119,6 @@ void Board::update(Uint32 delta_time)
     newBlock();
   }
 
-  const Uint16 playerLife = m_player->livesLeft();
   // If player collides with object, pass on effects
   GameObject* collider = m_board[m_player->y() * m_width + m_player->x()];
   if (collider)
@@ -124,11 +128,6 @@ void Board::update(Uint32 delta_time)
     Effect e;
     e.life = -1;
     m_player->setEffects(e);
-  }
-
-  // Check if the player has lost a life
-  if (m_player->livesLeft() < playerLife) {
-    std::cout << "player died" << std::endl;
   }
 }
 
@@ -197,6 +196,9 @@ std::vector<std::pair<Uint16, Uint16> > Board::freeTiles() const
 void Board::newBlock()
 {
     std::vector<std::pair<Uint16, Uint16> > free_blocks = freeTiles();
+    if (free_blocks.empty())
+      return;
+
     std::pair<Uint16, Uint16> new_block = free_blocks[rand() % free_blocks.size()];
     switch (rand() % 6) {
     case 0:
@@ -674,7 +676,14 @@ STATE_CHANGE PlayState::update(Uint32 delta_time)
     return NO_CHANGE;
   }
 
+  const Uint16 playerLife = m_board.player()->livesLeft();
   m_board.update(delta_time);
+  // Check if the player has lost a life
+  if (m_board.player()->livesLeft() < playerLife) {
+    std::cout << "player died" << std::endl;
+  }
+
+
   return NO_CHANGE;
 }
 
