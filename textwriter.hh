@@ -4,7 +4,7 @@
  * TTF_Init() must have been called before instantiating this class.
  *
  * Copyright © 2011 by Jesper Juhl
- * Licensed under the terms of the GNU General Public Licence (GPL) version 2.
+ * Licensed under the terms of the GNU General Public License (GPL) version 2.
  */
 
 #ifndef BNB_TEXTWRITER_HH
