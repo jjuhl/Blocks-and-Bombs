@@ -209,7 +209,7 @@ void ResourceLoader::unload(Resource* res)
 
 SDL_Surface* IMG_LoadDisplayFormat(const std::string& file)
 {
-  std::string filename = std::string(RESOURCES_DIR) + "images/" + file;
+  const std::string filename = std::string(RESOURCES_DIR) + "images/" + file;
   SDL_Surface* tmp = IMG_Load(filename.c_str());
   if (!tmp)
     throw Exception("Failed to load image '" + filename + "': " + std::string(IMG_GetError()));
