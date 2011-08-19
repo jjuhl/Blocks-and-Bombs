@@ -53,13 +53,6 @@ doesn't need to re-do them each time.
 
 ---
 
-Make it possible to change all settings via commandline switches
-and/or manual editing of the config file. This is so that users who
-can't launch the game in graphical mode for some reason still have a
-way of adjusting the settings so that the game will start.
-
----
-
 If no user-defined config is available, default to starting the game
 in high quality mode and automatically fall back to medium or low if
 some setting fails.
@@ -243,3 +236,18 @@ so that for example levels 1-10 take place in a forest theme, levels
 11-20 are in a space setting, levels 21-30 are in a volcano theme
 etc. Even if the gameplay is the same, just varying graphics and audio
 will give the player something new every n levels.
+
+Perhaps it would also be nice to display some small introduction
+screen to each theme? I'm thinking that if we attach specific types of
+levels to a theme then it might be nice every 10 or 20 levels when we
+switch theme to show womething like "Welcome to the jungle; beware the
+<whatever>" or something...
+
+---
+
+We should make the score counter not just jump to its new value
+whenever the player scores points, rather it should count up from the
+current score to the next over a period of (say) 1 to 2 seconds. This
+will make it more dynamic and entertaining. If the player scores again
+within that timeframe, that's easy, we just extend the deadline to 1-2
+sec again with the new target score.
