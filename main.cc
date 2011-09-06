@@ -9,23 +9,23 @@
 #include <libconfig.h++>
 #include "bbengine.hh"
 #include "config.h"
+#include "except.hh"
 
 // ensure that SDL is always shut down properly, no matter how we terminate
-class SDLQuit {
+class SDLWrap {
 public:
-  SDLQuit() {}
-  ~SDLQuit() { SDL_Quit(); }
+  SDLWrap(Uint32 sdl_flags)
+  {
+    if (SDL_Init(sdl_flags))
+      throw Exception("Unable to initialize SDL: "
+                      + std::string(SDL_GetError()));
+  }
+  ~SDLWrap() { SDL_Quit(); }
 };
 
 int main(int argc, char* argv[])
 {
-  Uint32 sdl_flags = SDL_INIT_TIMER|SDL_INIT_VIDEO;
-  int err = SDL_Init(sdl_flags);
-  if (err) {
-    std::cerr << "Unable to initialize SDL: " << SDL_GetError() << std::endl;
-    return EXIT_FAILURE;
-  }
-  SDLQuit sq;
+  SDLWrap sdl(SDL_INIT_TIMER|SDL_INIT_VIDEO);
 
   SDL_WM_SetCaption("Blocks and Bombs", "Blocks and Bombs");
   // Setting the icon must happen before SDL_SetVideoMode
