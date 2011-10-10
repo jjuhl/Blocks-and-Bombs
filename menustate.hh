@@ -32,6 +32,7 @@ private:
     NEW_GAME = 0,
     SHOW_HIGHSCORE,
     SHOW_HELP,
+    SHOW_ABOUT,
     QUIT_GAME
   };
 

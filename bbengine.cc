@@ -14,6 +14,8 @@
 #include "playstate.hh"
 #include "helpstate.hh"
 #include "highscorestate.hh"
+#include "textdisplaystate.hh"
+#include "aboutdata.hh"
 #include "bbengine.hh"
 
 BBEngine::BBEngine(int width, int height, int bpp)
@@ -145,6 +147,9 @@ void BBEngine::changeStateTo(enum STATE_CHANGE new_state)
     break;
   case GOTO_HIGHSCORE:
     m_currentState = new HighscoreState();
+    break;
+  case GOTO_ABOUT:
+    m_currentState = new TextDisplayState(ABOUT_TEXT);
     break;
   default:
     throw Exception("Unknown state in changeStateTo");
