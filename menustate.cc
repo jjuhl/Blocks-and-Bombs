@@ -22,6 +22,7 @@ MenuState::MenuState()
 
   // Build the menu
   m_items.push_back(MenuItem("New Game", COLOR_OF_ACTIVE, true, NEW_GAME));
+  m_items.push_back(MenuItem("About", COLOR_OF_INACTIVE, false, SHOW_ABOUT));
   /*
   m_items.push_back(MenuItem("Show Highscore", COLOR_OF_INACTIVE, false, SHOW_HIGHSCORE));
   m_items.push_back(MenuItem("Show Help", COLOR_OF_INACTIVE, false, SHOW_HELP));
@@ -94,6 +95,8 @@ STATE_CHANGE MenuState::handleKey(const SDL_KeyboardEvent& key)
           return GOTO_HIGHSCORE;
         case SHOW_HELP:
           return GOTO_HELP;
+        case SHOW_ABOUT:
+          return GOTO_ABOUT;
         }
         break;
       }

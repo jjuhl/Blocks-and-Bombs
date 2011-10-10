@@ -41,6 +41,7 @@ set(SOURCES
   menustate.cc
   playstate.cc
   helpstate.cc
+  textdisplaystate.cc
   highscorestate.cc
   textwriter.cc
   resources.cc
