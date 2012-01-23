@@ -67,14 +67,18 @@ class GameObject {
 public:
   virtual ~GameObject() { }
 
-  virtual void update(Uint32 delta_time) = 0;
+  virtual void update(Uint32 delta_time) { }
   // This draw method is called by the Board class when drawing. This
   // method should not do any actual drawing itself, just return a
   // pointer to the surface to be used a source and a rectangle
   // describing the area of that surface the GameObject wishes to have
   // drawn. The Board class then takes care of centering this on the
   // tile the object occupies and do the actual drawing.
-  virtual void draw(SDL_Surface** surface, SDL_Rect* rect) = 0;
+  virtual void draw(SDL_Surface*& surface, SDL_Rect& rect)
+  {
+    surface = 0;
+    rect.x = rect.y = rect.w = rect.h = 0;
+  }
 
   virtual Uint16 x() const { return m_x; }
   virtual Uint16 y() const { return m_y; }
@@ -110,7 +114,7 @@ public:
   BLOCK_COLOR color() { return m_col; }
 
   virtual void update(Uint32 delta_time);
-  virtual void draw(SDL_Surface** surface, SDL_Rect* rect);
+  virtual void draw(SDL_Surface*& surface, SDL_Rect& rect);
   virtual void collision(GameObject* other);
 private:
   Block(const Block&);
@@ -129,7 +133,7 @@ public:
   virtual ~Wall();
 
   virtual void update(Uint32 delta_time);
-  virtual void draw(SDL_Surface** surface, SDL_Rect* rect);
+  virtual void draw(SDL_Surface*& surface, SDL_Rect& rect);
   virtual void collision(GameObject*);
 
   virtual bool isBlocked() { return true; }
@@ -154,7 +158,7 @@ public:
   ~Player();
 
   void update(Uint32 delta_time);
-  void draw(SDL_Surface** surface, SDL_Rect* rect);
+  void draw(SDL_Surface*& surface, SDL_Rect& rect);
 
   void goUp() { m_direction = UP; }
   void goDown() { m_direction = DOWN; }

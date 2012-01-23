@@ -182,15 +182,17 @@ void Board::draw(SDL_Surface* screen)
     if (!*it)
       continue;
 
-    (*it)->draw(&surf, &srect);
+    (*it)->draw(surf, srect);
     centerDraw(*it, srect, drect);
-    SDL_BlitSurface(surf, &srect, screen, &drect);
+    if (surf)
+      SDL_BlitSurface(surf, &srect, screen, &drect);
   }
 
   // Draw the player on top
-  m_player->draw(&surf, &srect);
+  m_player->draw(surf, srect);
   centerDraw(m_player, srect, drect);
-  SDL_BlitSurface(surf, &srect, screen, &drect);
+  if (surf)
+    SDL_BlitSurface(surf, &srect, screen, &drect);
 }
 
 std::vector<std::pair<Uint16, Uint16> > Board::freeTiles() const
@@ -325,10 +327,10 @@ void Block::update(Uint32 delta_time)
   }
 }
 
-void Block::draw(SDL_Surface** surface, SDL_Rect* rect)
+void Block::draw(SDL_Surface*& surface, SDL_Rect& rect)
 {
-  *surface = m_current_frame;
-  *rect = m_current_frame_rect;
+  surface = m_current_frame;
+  rect = m_current_frame_rect;
 }
 
 void Block::collision(GameObject* other)
@@ -368,11 +370,11 @@ void Wall::update(Uint32)
 {
 }
 
-void Wall::draw(SDL_Surface** surface, SDL_Rect* rect)
+void Wall::draw(SDL_Surface*& surface, SDL_Rect& rect)
 {
-  *surface = m_current_frame;
+  surface = m_current_frame;
   SDL_Rect r = m_current_frame_rect;
-  *rect = r;
+  rect = r;
 }
 
 void Wall::collision(GameObject* other)
@@ -493,7 +495,7 @@ void Player::update(Uint32 delta_time)
   m_time_since_move = 0;
 }
 
-void Player::draw(SDL_Surface** surface, SDL_Rect* rect)
+void Player::draw(SDL_Surface*& surface, SDL_Rect& rect)
 {
   // clear our frame surface
   Uint32 col = SDL_MapRGBA(m_frame->format, 0, 0, 0, 0);
@@ -556,8 +558,8 @@ void Player::draw(SDL_Surface** surface, SDL_Rect* rect)
   r.y = 0;
   r.w = m_frame->w;
   r.h = m_frame->h;
-  *rect = r;
-  *surface = m_frame;
+  rect = r;
+  surface = m_frame;
 }
 
 void Player::setEffects(const Effect& e)
