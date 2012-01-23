@@ -109,7 +109,7 @@ class Block : public GameObject {
 public:
   Block(Board* board, Uint16 x, Uint16 y, AnimationResource& anim, BLOCK_COLOR col,
         Sint32 timeout);
-  virtual ~Block();
+  virtual ~Block() { }
 
   BLOCK_COLOR color() { return m_col; }
 
@@ -130,9 +130,8 @@ private:
 class Wall : public GameObject {
 public:
   Wall(Board* board, Uint16 x, Uint16 y);
-  virtual ~Wall();
+  virtual ~Wall() { }
 
-  virtual void update(Uint32 delta_time);
   virtual void draw(SDL_Surface*& surface, SDL_Rect& rect);
   virtual void collision(GameObject*);
 

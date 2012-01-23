@@ -302,10 +302,6 @@ Block::Block(Board* board, Uint16 x, Uint16 y, AnimationResource& anim, BLOCK_CO
   m_board->addGameObject(this);
 }
 
-Block::~Block()
-{
-}
-
 void Block::update(Uint32 delta_time)
 {
   m_current_frame = m_anim.currentFrameSurface(delta_time);
@@ -360,14 +356,6 @@ Wall::Wall(Board* board, Uint16 x, Uint16 y)
   m_current_frame_rect.w = m_current_frame->w;
   m_current_frame_rect.h = m_current_frame->h;
   m_board->addGameObject(this);
-}
-
-Wall::~Wall()
-{
-}
-
-void Wall::update(Uint32)
-{
 }
 
 void Wall::draw(SDL_Surface*& surface, SDL_Rect& rect)
