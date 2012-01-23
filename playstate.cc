@@ -77,8 +77,8 @@ void Board::update(Uint32 delta_time)
     std::set<GameObject*>::iterator dead = m_deadObjects.find(*it);
     if (dead != m_deadObjects.end()) {
       *it = 0;
-      m_deadObjects.erase(dead);
       delete *dead;
+      m_deadObjects.erase(dead);
     }
   }
 
