@@ -67,7 +67,7 @@ class GameObject {
 public:
   virtual ~GameObject() { }
 
-  virtual void update(Uint32 delta_time) { }
+   virtual void update(Uint32 /* delta_time */) { }
   // This draw method is called by the Board class when drawing. This
   // method should not do any actual drawing itself, just return a
   // pointer to the surface to be used a source and a rectangle
